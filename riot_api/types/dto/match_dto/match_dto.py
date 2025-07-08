@@ -319,7 +319,7 @@ class ChallengesDTO(BaseModel):
     controlWardsPlaced: Count
     damagePerMinute: float
     damageTakenOnTeamPercentage: Percentage
-    dancedWithRiftHerald: int
+    dancedWithRiftHerald: Count
     deathsByEnemyChamps: Count
     dodgeSkillShotsSmallWindow: Count
     doubleAces: Count
@@ -338,7 +338,7 @@ class ChallengesDTO(BaseModel):
     firstTurretKilledTime: Optional[float] = None
     flawlessAces: int
     fullTeamTakedown: int
-    gameLength: float
+    gameLength: TimeDelta
     getTakedownsInAllLanesEarlyJungleAsLaner: Optional[int] = None
     goldPerMinute: float
     hadOpenNexus: int
@@ -346,13 +346,13 @@ class ChallengesDTO(BaseModel):
     initialBuffCount: Count
     initialCrabCount: Count
     jungleCsBefore10Minutes: float
-    junglerTakedownsNearDamagedEpicMonster: int
-    kda: float
-    killAfterHiddenWithAlly: int
+    junglerTakedownsNearDamagedEpicMonster: Count
+    kda: AmountFloat
+    killAfterHiddenWithAlly: Count
     killedChampTookFullTeamDamageSurvived: int
     killingSprees: int
-    killParticipation: float
-    killsNearEnemyTurret: int
+    killParticipation: Percentage
+    killsNearEnemyTurret: Count
     killsOnOtherLanesEarlyJungleAsLaner: Optional[int] = None
     killsOnRecentlyHealedByAramPack: int
     killsUnderOwnTurret: int
@@ -361,32 +361,32 @@ class ChallengesDTO(BaseModel):
     kTurretsDestroyedBeforePlatesFall: int
     landSkillShotsEarlyGame: int
     laneMinionsFirst10Minutes: int
-    lostAnInhibitor: int
+    lostAnInhibitor: Count
     maxKillDeficit: int
     mejaisFullStackInTime: int
     moreEnemyJungleThanOpponent: float
-    multiKillOneSpell: int
-    multikills: int
-    multikillsAfterAggressiveFlash: int
-    multiTurretRiftHeraldCount: int
-    outerTurretExecutesBefore10Minutes: int
-    outnumberedKills: int
-    outnumberedNexusKill: int
+    multiKillOneSpell: Count
+    multikills: Count
+    multikillsAfterAggressiveFlash: Count
+    multiTurretRiftHeraldCount: Count
+    outerTurretExecutesBefore10Minutes: Count
+    outnumberedKills: Count
+    outnumberedNexusKill: Count
     perfectDragonSoulsTaken: int
     perfectGame: int
     pickKillWithAlly: int
     poroExplosions: int
     quickCleanse: int
     quickFirstTurret: int
-    quickSoloKills: int
-    riftHeraldTakedowns: int
-    saveAllyFromDeath: int
-    scuttleCrabKills: int
+    quickSoloKills: Count
+    riftHeraldTakedowns: Count
+    saveAllyFromDeath: Count
+    scuttleCrabKills: Count
     shortestTimeToAceFromFirstTakedown: Optional[float] = None
     skillshotsDodged: int
     skillshotsHit: int
     snowballsHit: int
-    soloBaronKills: int
+    soloBaronKills: Count
     SWARM_DefeatAatrox: int
     SWARM_DefeatBriar: int
     SWARM_DefeatMiniBosses: int
@@ -397,33 +397,33 @@ class ChallengesDTO(BaseModel):
     SWARM_ReachLevel50: int
     SWARM_Survive15Min: int
     SWARM_WinWith5EvolvedWeapons: int
-    soloKills: int
-    stealthWardsPlaced: int
-    survivedSingleDigitHpCount: int
+    soloKills: Count
+    stealthWardsPlaced: Count
+    survivedSingleDigitHpCount: Count
     survivedThreeImmobilizesInFight: int
     takedownOnFirstTurret: int
-    takedowns: int
+    takedowns: Count
     takedownsAfterGainingLevelAdvantage: int
-    takedownsBeforeJungleMinionSpawn: int
-    takedownsFirstXMinutes: int
+    takedownsBeforeJungleMinionSpawn: Count
+    takedownsFirstXMinutes: Count
     takedownsInAlcove: int
-    takedownsInEnemyFountain: int
-    teamBaronKills: int
+    takedownsInEnemyFountain: Count
+    teamBaronKills: Count
     teamDamagePercentage: float
-    teamElderDragonKills: int
-    teamRiftHeraldKills: int
-    tookLargeDamageSurvived: int
-    turretPlatesTaken: int
-    turretsTakenWithRiftHerald: int
-    turretTakedowns: int
-    twentyMinionsIn3SecondsCount: int
-    twoWardsOneSweeperCount: int
+    teamElderDragonKills: Count
+    teamRiftHeraldKills: Count
+    tookLargeDamageSurvived: Count
+    turretPlatesTaken: Count
+    turretsTakenWithRiftHerald: Count
+    turretTakedowns: Count
+    twentyMinionsIn3SecondsCount: Count
+    twoWardsOneSweeperCount: Count
     unseenRecalls: int
-    visionScorePerMinute: float
-    wardsGuarded: int
-    wardTakedowns: int
-    wardTakedownsBefore20M: int
-    HealFromMapSources: float
+    visionScorePerMinute: AmountFloat
+    wardsGuarded: Count
+    wardTakedowns: Count
+    wardTakedownsBefore20M: Count
+    HealFromMapSources: AmountFloat
 
     model_config = ConfigDict(use_enum_values=True)
 
@@ -470,7 +470,7 @@ class PerkStyleSelectionDTO(BaseModel):
 class TeamDTO(BaseModel):
     bans: List["BanDTO"]
     objectives: "ObjectivesDTO"
-    teamId: int
+    teamId: Team
     win: bool
     feats: "FeatsDTO"
 
