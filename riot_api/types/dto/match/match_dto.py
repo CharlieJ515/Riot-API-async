@@ -1,91 +1,31 @@
-from typing import List, Optional, NewType, Annotated
-from datetime import datetime, timedelta
-from enum import Enum, IntEnum, StrEnum
+from typing import List, Optional, Annotated
 
 from pydantic import BaseModel, Field, PlainValidator, ConfigDict, PlainSerializer
 
-from riot_api.types.league_of_legends import (
+from riot_api.types.enums import (
     ChampionId,
     ChampionName,
     ItemId,
-    SummonerSpell,
+    MapId,
 )
-from riot_api.types.riot import MapId
-from riot_api.utils import normalize_string
-
-
-def datetime_to_millis(dt: datetime) -> int:
-    return int(dt.timestamp() * 1000)
-
-
-def millis_to_datetime(v: int) -> datetime:
-    return datetime.fromtimestamp(v / 1000)
-
-
-def timedelta_to_seconds(td: timedelta) -> int:
-    return int(td.total_seconds())
-
-
-def normalize_champion_name(v: str) -> str:
-    normalized_str = normalize_string(v)
-    return ChampionName(normalized_str)
-
-
-DatetimeMilli = Annotated[
-    datetime, PlainValidator(millis_to_datetime), PlainSerializer(datetime_to_millis)
-]
-TimeDelta = Annotated[timedelta, PlainSerializer(timedelta_to_seconds)]
-Puuid = NewType("Puuid", str)
-Count = NewType("Count", int)
-AmountInt = NewType("AmountInt", int)
-AmountFloat = NewType("AmountFloat", float)
-Percentage = NewType("Percentage", float)
-Unused = Field(
-    exclude=True,
-    repr=False,
-    deprecated=True,
-    description="Unused field",
+from riot_api.types.enums import (
+    Participant,
+    Team,
+    Position,
+    KaynTransform,
+    Role,
 )
-
-
-class Participant(IntEnum):
-    BLUE1 = 1
-    BLUE2 = 2
-    BLUE3 = 3
-    BLUE4 = 4
-    BLUE5 = 5
-    RED1 = 6
-    RED2 = 7
-    RED3 = 8
-    RED4 = 9
-    RED5 = 10
-
-
-class Team(IntEnum):
-    BLUE = 100
-    RED = 200
-
-
-class Position(StrEnum):
-    TOP = "TOP"
-    JUNGLE = "JUNGLE"
-    MIDDLE = "MIDDLE"
-    BOTTOM = "BOTTOM"
-    UTILITY = "UTILITY"
-
-
-class KaynTransform(IntEnum):
-    NONE = 0
-    SLAYER = 1
-    ASSASSIN = 2
-
-
-class Role(StrEnum):
-    SOLO = "SOLO"
-    DUO = "DUO"
-    SUPPORT = "SUPPORT"
-    CARRY = "CARRY"
-    NONE = "NONE"
+from riot_api.types.converters import normalize_champion_name
+from riot_api.types.base_types import (
+    Puuid,
+    Count,
+    AmountInt,
+    AmountFloat,
+    Percentage,
+    DatetimeMilli,
+    TimeDelta,
+)
+from riot_api.types.enums.summoner_spells import SummonerSpellId
 
 
 class MatchDTO(BaseModel):
@@ -231,9 +171,9 @@ class ParticipantDTO(BaseModel):
     spell4Casts: Count
     subteamPlacement: int
     summoner1Casts: Count
-    summoner1Id: SummonerSpell
+    summoner1Id: SummonerSpellId
     summoner2Casts: Count
-    summoner2Id: SummonerSpell
+    summoner2Id: SummonerSpellId
     summonerId: str
     summonerLevel: int
     summonerName: str

@@ -1,6 +1,4 @@
-from unittest.mock import AsyncMock, patch
 import os
-from pathlib import Path
 
 import pytest
 import pytest_asyncio
@@ -9,7 +7,7 @@ import httpx
 import respx
 
 from riot_api.client import Client
-from riot_api.types import (
+from riot_api.types.request import (
     RoutePlatform,
     RouteRegion,
     RateLimit,

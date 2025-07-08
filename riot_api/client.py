@@ -3,8 +3,8 @@ from typing import Union, Optional, TypeVar, Type, cast
 from pydantic import BaseModel
 
 from riot_api.base_client import BaseClient
-from riot_api.types import RoutePlatform, RouteRegion, HttpMethod, HttpRequest
-from riot_api.types import (
+from riot_api.types.request import RoutePlatform, RouteRegion, HttpMethod, HttpRequest
+from riot_api.types.request import (
     RankedTier,
     RankedDivision,
     RankedQueue,

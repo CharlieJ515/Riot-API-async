@@ -4,7 +4,7 @@ from aiolimiter import AsyncLimiter
 import httpx
 from pydantic import BaseModel
 
-from riot_api.types import HttpRequest, RateLimit
+from riot_api.types.request import HttpRequest, RateLimit
 
 T = TypeVar("T", bound=BaseModel)
 

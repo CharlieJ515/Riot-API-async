@@ -4,7 +4,7 @@ from typing import Union, Dict, Optional, Any, Type
 
 from pydantic import BaseModel
 
-from riot_api.types.region import RoutePlatform, RouteRegion
+from riot_api.types.request.routes import RoutePlatform, RouteRegion
 
 
 class HttpMethod(Enum):

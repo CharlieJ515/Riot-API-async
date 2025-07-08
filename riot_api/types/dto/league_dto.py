@@ -1,6 +1,8 @@
 from typing import List, Optional
 from pydantic import BaseModel, RootModel
 
+from riot_api.types.base_types import Puuid
+
 
 class LeagueListDTO(BaseModel):
     leagueId: str
@@ -20,7 +22,7 @@ class LeagueItemDTO(BaseModel):
     rank: str
     leaguePoints: int
     losses: int
-    puuid: str
+    puuid: Puuid
 
 
 class LeagueEntryListDTO(RootModel):
@@ -29,7 +31,7 @@ class LeagueEntryListDTO(RootModel):
 
 class LeagueEntryDTO(BaseModel):
     leagueId: str
-    puuid: str
+    puuid: Puuid
     queueType: str
     tier: str
     rank: str

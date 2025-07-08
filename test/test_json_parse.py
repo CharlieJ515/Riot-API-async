@@ -15,7 +15,7 @@ from riot_api.types.dto import (
     TimelineDTO,
     MatchIdListDTO,
 )
-from riot_api.utils import normalize_string
+from riot_api.types.converters import normalize_string
 
 
 def remove_trivial_added_none_fields(diff):

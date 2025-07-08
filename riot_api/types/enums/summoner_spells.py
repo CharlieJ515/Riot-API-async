@@ -1,7 +1,7 @@
 from enum import IntEnum
 
 
-class SummonerSpell(IntEnum):
+class SummonerSpellId(IntEnum):
     BARRIER_21 = 21
     CLEANSE_1 = 1
     FLASH_2202 = 2202
