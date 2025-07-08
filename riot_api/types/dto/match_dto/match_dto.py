@@ -1,7 +1,6 @@
 from typing import List, Optional, NewType, Annotated
 from datetime import datetime, timedelta
 from enum import Enum, IntEnum, StrEnum
-import re
 
 from pydantic import BaseModel, Field, PlainValidator, ConfigDict, PlainSerializer
 
@@ -12,6 +11,7 @@ from riot_api.types.league_of_legends import (
     SummonerSpell,
 )
 from riot_api.types.riot import MapId
+from riot_api.utils import normalize_string
 
 
 def datetime_to_millis(dt: datetime) -> int:
@@ -27,8 +27,8 @@ def timedelta_to_seconds(td: timedelta) -> int:
 
 
 def normalize_champion_name(v: str) -> str:
-    cleaned = re.sub(r"[^A-Za-z]", "", v).lower()
-    return ChampionName(cleaned)
+    normalized_str = normalize_string(v)
+    return ChampionName(normalized_str)
 
 
 DatetimeMilli = Annotated[
@@ -130,7 +130,11 @@ class ParticipantDTO(BaseModel):
     champExperience: AmountInt
     champLevel: Count
     championId: ChampionId
-    championName: Annotated[ChampionName, PlainValidator(normalize_champion_name)]
+    championName: Annotated[
+        ChampionName,
+        PlainValidator(normalize_champion_name),
+        PlainSerializer(lambda e: e.value, return_type=str),
+    ]
     commandPings: Count
     championTransform: KaynTransform
     consumablesPurchased: Count

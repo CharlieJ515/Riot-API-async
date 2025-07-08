@@ -15,6 +15,7 @@ from riot_api.types.dto import (
     TimelineDTO,
     MatchIdListDTO,
 )
+from riot_api.utils import normalize_string
 
 
 def remove_trivial_added_none_fields(diff):
@@ -59,6 +60,28 @@ def remove_trivial_zero_numeric_type_diffs(diff):
         diff.pop("type_changes", None)
 
 
+def remove_trivial_normalized_string_diffs(diff):
+    """
+    Remove 'values_changed' where old_value is a string and
+    normalizing it makes it equal to new_value.
+    """
+    values_changed = diff.get("values_changed", {})
+    keys_to_remove = []
+
+    for path, change in values_changed.items():
+        old_value = change.get("old_value")
+        new_value = change.get("new_value")
+        if isinstance(old_value, str) and isinstance(new_value, str):
+            if normalize_string(old_value) == new_value:
+                keys_to_remove.append(path)
+
+    for key in keys_to_remove:
+        del values_changed[key]
+
+    if not values_changed:
+        diff.pop("values_changed", None)
+
+
 @pytest.mark.parametrize(
     "filename, dto_class",
     [
@@ -79,6 +102,7 @@ def test_parse_dto_matches_json_dict(filename, dto_class):
     diff = DeepDiff(expected_dict, parsed_dict, verbose_level=2)
     remove_trivial_added_none_fields(diff)
     remove_trivial_zero_numeric_type_diffs(diff)
+    remove_trivial_normalized_string_diffs(diff)
 
     if diff:
         formatted_diff = pprint.pformat(diff, width=120)
