@@ -1,0 +1,8 @@
+from enum import StrEnum
+
+
+class Ward(StrEnum):
+    CONTROL_WARD = "CONTROL_WARD"
+    SIGHT_WARD = "SIGHT_WARD"
+    YELLOW_TRINKET = "YELLOW_TRINKET"
+    BLUE_TRINKET = "BLUE_TRINKET"

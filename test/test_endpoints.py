@@ -86,10 +86,9 @@ async def test_get_account_region(client: Client):
     route = respx.route(
         method="GET",
         host="asia.api.riotgames.com",
-        path="/riot/account/v1/active-shards/by-game/lol/by-puuid/l51rA9uBuXO1Zokld038OVu0aRhDKA2NcE5J5Ng2LmMxzZ2gJArIa5v_UaiEmHSDdSyKsbiiawWX_w",
+        path="/riot/account/v1/region/by-game/lol/by-puuid/l51rA9uBuXO1Zokld038OVu0aRhDKA2NcE5J5Ng2LmMxzZ2gJArIa5v_UaiEmHSDdSyKsbiiawWX_w",
     ).mock(return_value=httpx.Response(200, content=json_str))
     response = await client.get_account_region(ROUTE_REGION, "lol", PUUID)
-
     assert route.called
     assert route.call_count == 1
     assert isinstance(response, type(expected_response))

@@ -39,3 +39,9 @@ class Role(StrEnum):
     SUPPORT = "SUPPORT"
     CARRY = "CARRY"
     NONE = "NONE"
+
+
+class Lane(StrEnum):
+    TOP = "TOP_LANE"
+    MID = "MID_LANE"
+    BOT = "BOT_LANE"
