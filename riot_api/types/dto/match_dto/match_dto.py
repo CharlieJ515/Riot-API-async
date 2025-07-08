@@ -1,5 +1,91 @@
-from typing import List, Optional
-from pydantic import BaseModel, Field
+from typing import List, Optional, NewType, Annotated
+from datetime import datetime, timedelta
+from enum import Enum, IntEnum, StrEnum
+import re
+
+from pydantic import BaseModel, Field, PlainValidator, ConfigDict, PlainSerializer
+
+from riot_api.types.league_of_legends import (
+    ChampionId,
+    ChampionName,
+    ItemId,
+    SummonerSpell,
+)
+from riot_api.types.riot import MapId
+
+
+def datetime_to_millis(dt: datetime) -> int:
+    return int(dt.timestamp() * 1000)
+
+
+def millis_to_datetime(v: int) -> datetime:
+    return datetime.fromtimestamp(v / 1000)
+
+
+def timedelta_to_seconds(td: timedelta) -> int:
+    return int(td.total_seconds())
+
+
+def normalize_champion_name(v: str) -> str:
+    cleaned = re.sub(r"[^A-Za-z]", "", v).lower()
+    return ChampionName(cleaned)
+
+
+DatetimeMilli = Annotated[
+    datetime, PlainValidator(millis_to_datetime), PlainSerializer(datetime_to_millis)
+]
+TimeDelta = Annotated[timedelta, PlainSerializer(timedelta_to_seconds)]
+Puuid = NewType("Puuid", str)
+Count = NewType("Count", int)
+AmountInt = NewType("AmountInt", int)
+AmountFloat = NewType("AmountFloat", float)
+Percentage = NewType("Percentage", float)
+Unused = Field(
+    exclude=True,
+    repr=False,
+    deprecated=True,
+    description="Unused field",
+)
+
+
+class Participant(IntEnum):
+    BLUE1 = 1
+    BLUE2 = 2
+    BLUE3 = 3
+    BLUE4 = 4
+    BLUE5 = 5
+    RED1 = 6
+    RED2 = 7
+    RED3 = 8
+    RED4 = 9
+    RED5 = 10
+
+
+class Team(IntEnum):
+    BLUE = 100
+    RED = 200
+
+
+class Position(StrEnum):
+    TOP = "TOP"
+    JUNGLE = "JUNGLE"
+    MIDDLE = "MIDDLE"
+    BOTTOM = "BOTTOM"
+    UTILITY = "UTILITY"
+
+
+class KaynTransform(IntEnum):
+    NONE = 0
+    SLAYER = 1
+    ASSASSIN = 2
+
+
+class Role(StrEnum):
+    SOLO = "SOLO"
+    DUO = "DUO"
+    SUPPORT = "SUPPORT"
+    CARRY = "CARRY"
+    NONE = "NONE"
 
 
 class MatchDTO(BaseModel):
@@ -10,95 +96,98 @@ class MatchDTO(BaseModel):
 class MetadataDTO(BaseModel):
     dataVersion: str
     matchId: str
-    participants: List[str]
+    participants: List[Puuid]
 
 
 class InfoDTO(BaseModel):
     endOfGameResult: str
-    gameCreation: int
-    gameDuration: int
-    gameEndTimestamp: int
+    gameCreation: DatetimeMilli
+    # TODO - change gameDuration according to riot document
+    gameDuration: TimeDelta
+    gameEndTimestamp: DatetimeMilli
     gameId: int
     gameMode: str
     gameName: str
-    gameStartTimestamp: int
+    gameStartTimestamp: DatetimeMilli
     gameType: str
     gameVersion: str
-    mapId: int
+    mapId: MapId
     participants: List["ParticipantDTO"]
     platformId: str
     queueId: int
     teams: List["TeamDTO"]
     tournamentCode: Optional[str] = None
 
+    model_config = ConfigDict(use_enum_values=True)
+
 
 class ParticipantDTO(BaseModel):
-    allInPings: int
-    assistMePings: int
-    assists: int
-    baronKills: int
+    allInPings: Count
+    assistMePings: Count
+    assists: Count
+    baronKills: Count
     bountyLevel: Optional[int] = None
-    champExperience: int
-    champLevel: int
-    championId: int
-    championName: str
-    commandPings: int
-    championTransform: int
-    consumablesPurchased: int
+    champExperience: AmountInt
+    champLevel: Count
+    championId: ChampionId
+    championName: Annotated[ChampionName, PlainValidator(normalize_champion_name)]
+    commandPings: Count
+    championTransform: KaynTransform
+    consumablesPurchased: Count
     challenges: "ChallengesDTO"
-    damageDealtToBuildings: int
-    damageDealtToObjectives: int
-    damageDealtToTurrets: int
-    damageSelfMitigated: int
-    deaths: int
-    detectorWardsPlaced: int
-    doubleKills: int
-    dragonKills: int
+    damageDealtToBuildings: AmountInt
+    damageDealtToObjectives: AmountInt
+    damageDealtToTurrets: AmountInt
+    damageSelfMitigated: AmountInt
+    deaths: Count
+    detectorWardsPlaced: Count
+    doubleKills: Count
+    dragonKills: Count
     eligibleForProgression: bool
-    enemyMissingPings: int
-    enemyVisionPings: int
+    enemyMissingPings: Count
+    enemyVisionPings: Count
     firstBloodAssist: bool
     firstBloodKill: bool
     firstTowerAssist: bool
     firstTowerKill: bool
     gameEndedInEarlySurrender: bool
     gameEndedInSurrender: bool
-    holdPings: int
-    getBackPings: int
-    goldEarned: int
-    goldSpent: int
-    individualPosition: str
-    inhibitorKills: int
-    inhibitorTakedowns: int
-    inhibitorsLost: int
-    item0: int
-    item1: int
-    item2: int
-    item3: int
-    item4: int
-    item5: int
-    item6: int
-    itemsPurchased: int
-    killingSprees: int
-    kills: int
-    lane: str
-    largestCriticalStrike: int
-    largestKillingSpree: int
-    largestMultiKill: int
-    longestTimeSpentLiving: int
-    magicDamageDealt: int
-    magicDamageDealtToChampions: int
-    magicDamageTaken: int
+    holdPings: Count
+    getBackPings: Count
+    goldEarned: AmountInt
+    goldSpent: AmountInt
+    individualPosition: Position
+    inhibitorKills: Count
+    inhibitorTakedowns: Count
+    inhibitorsLost: Count
+    item0: ItemId
+    item1: ItemId
+    item2: ItemId
+    item3: ItemId
+    item4: ItemId
+    item5: ItemId
+    item6: ItemId
+    itemsPurchased: Count
+    killingSprees: Count
+    kills: Count
+    lane: Position
+    largestCriticalStrike: AmountInt
+    largestKillingSpree: Count
+    largestMultiKill: Count
+    longestTimeSpentLiving: TimeDelta
+    magicDamageDealt: AmountInt
+    magicDamageDealtToChampions: AmountInt
+    magicDamageTaken: AmountInt
     missions: "MissionsDTO"
-    neutralMinionsKilled: int
-    needVisionPings: int
-    nexusKills: int
-    nexusTakedowns: int
-    nexusLost: int
-    objectivesStolen: int
-    objectivesStolenAssists: int
-    onMyWayPings: int
-    participantId: int
+    neutralMinionsKilled: Count
+    needVisionPings: Count
+    nexusKills: Count
+    nexusTakedowns: Count
+    nexusLost: Count
+    objectivesStolen: Count
+    objectivesStolenAssists: Count
+    onMyWayPings: Count
+    participantId: Participant
     PlayerScore0: int
     PlayerScore1: int
     PlayerScore2: int
@@ -111,11 +200,11 @@ class ParticipantDTO(BaseModel):
     PlayerScore9: int
     PlayerScore10: int
     PlayerScore11: int
-    pentaKills: int
+    pentaKills: Count
     perks: "PerksDTO"
-    physicalDamageDealt: int
-    physicalDamageDealtToChampions: int
-    physicalDamageTaken: int
+    physicalDamageDealt: AmountInt
+    physicalDamageDealtToChampions: AmountInt
+    physicalDamageTaken: AmountInt
     placement: int
     playerAugment1: int
     playerAugment2: int
@@ -124,61 +213,63 @@ class ParticipantDTO(BaseModel):
     playerAugment5: int
     playerAugment6: int
     playerSubteamId: int
-    pushPings: int
+    pushPings: Count
     profileIcon: int
-    puuid: str
-    quadraKills: int
+    puuid: Puuid
+    quadraKills: Count
     riotIdGameName: str
     riotIdTagline: str
-    role: str
-    sightWardsBoughtInGame: int
-    spell1Casts: int
-    spell2Casts: int
-    spell3Casts: int
-    spell4Casts: int
+    role: Role
+    sightWardsBoughtInGame: Count
+    spell1Casts: Count
+    spell2Casts: Count
+    spell3Casts: Count
+    spell4Casts: Count
     subteamPlacement: int
-    summoner1Casts: int
-    summoner1Id: int
-    summoner2Casts: int
-    summoner2Id: int
+    summoner1Casts: Count
+    summoner1Id: SummonerSpell
+    summoner2Casts: Count
+    summoner2Id: SummonerSpell
     summonerId: str
     summonerLevel: int
     summonerName: str
     teamEarlySurrendered: bool
-    teamId: int
-    teamPosition: str
-    timeCCingOthers: int
-    timePlayed: int
-    totalAllyJungleMinionsKilled: int
-    totalDamageDealt: int
-    totalDamageDealtToChampions: int
-    totalDamageShieldedOnTeammates: int
-    totalDamageTaken: int
-    totalEnemyJungleMinionsKilled: int
-    totalHeal: int
-    totalHealsOnTeammates: int
-    totalMinionsKilled: int
+    teamId: Team
+    teamPosition: Position
+    timeCCingOthers: AmountInt
+    timePlayed: TimeDelta
+    totalAllyJungleMinionsKilled: Count
+    totalDamageDealt: AmountInt
+    totalDamageDealtToChampions: AmountInt
+    totalDamageShieldedOnTeammates: AmountInt
+    totalDamageTaken: AmountInt
+    totalEnemyJungleMinionsKilled: Count
+    totalHeal: AmountInt
+    totalHealsOnTeammates: AmountInt
+    totalMinionsKilled: Count
     totalTimeCCDealt: int
-    totalTimeSpentDead: int
-    totalUnitsHealed: int
-    tripleKills: int
-    trueDamageDealt: int
-    trueDamageDealtToChampions: int
-    trueDamageTaken: int
-    turretKills: int
-    turretTakedowns: int
-    turretsLost: int
-    unrealKills: int
-    visionScore: int
-    visionClearedPings: int
-    visionWardsBoughtInGame: int
-    wardsKilled: int
-    wardsPlaced: int
+    totalTimeSpentDead: TimeDelta
+    totalUnitsHealed: AmountInt
+    tripleKills: Count
+    trueDamageDealt: AmountInt
+    trueDamageDealtToChampions: AmountInt
+    trueDamageTaken: AmountInt
+    turretKills: Count
+    turretTakedowns: Count
+    turretsLost: Count
+    unrealKills: Count
+    visionScore: AmountInt
+    visionClearedPings: Count
+    visionWardsBoughtInGame: Count
+    wardsKilled: Count
+    wardsPlaced: Count
     win: bool
-    basicPings: int
-    dangerPings: int
-    retreatPings: int
+    basicPings: Count
+    dangerPings: Count
+    retreatPings: Count
     championSkinId: int
+
+    model_config = ConfigDict(use_enum_values=True)
 
 
 class ChallengesDTO(BaseModel):
@@ -212,32 +303,32 @@ class ChallengesDTO(BaseModel):
     visionScoreAdvantageLaneOpponent: float
     InfernalScalePickup: int
     fistBumpParticipation: int
-    voidMonsterKill: int
-    abilityUses: int
-    acesBefore15Minutes: int
+    voidMonsterKill: Count
+    abilityUses: Count
+    acesBefore15Minutes: Count
     alliedJungleMonsterKills: float
-    baronTakedowns: int
-    blastConeOppositeOpponentCount: int
+    baronTakedowns: Count
+    blastConeOppositeOpponentCount: Count
     bountyGold: float
-    buffsStolen: int
+    buffsStolen: Count
     completeSupportQuestInTime: int
-    controlWardsPlaced: int
+    controlWardsPlaced: Count
     damagePerMinute: float
-    damageTakenOnTeamPercentage: float
+    damageTakenOnTeamPercentage: Percentage
     dancedWithRiftHerald: int
-    deathsByEnemyChamps: int
-    dodgeSkillShotsSmallWindow: int
-    doubleAces: int
-    dragonTakedowns: int
-    legendaryItemUsed: List[int]
+    deathsByEnemyChamps: Count
+    dodgeSkillShotsSmallWindow: Count
+    doubleAces: Count
+    dragonTakedowns: Count
+    legendaryItemUsed: List[ItemId]
     effectiveHealAndShielding: float
     elderDragonKillsWithOpposingSoul: int
-    elderDragonMultikills: int
+    elderDragonMultikills: Count
     enemyChampionImmobilizations: int
     enemyJungleMonsterKills: float
     epicMonsterKillsNearEnemyJungler: int
     epicMonsterKillsWithin30SecondsOfSpawn: int
-    epicMonsterSteals: int
+    epicMonsterSteals: Count
     epicMonsterStolenWithoutSmite: int
     firstTurretKilled: int
     firstTurretKilledTime: Optional[float] = None
@@ -248,8 +339,8 @@ class ChallengesDTO(BaseModel):
     goldPerMinute: float
     hadOpenNexus: int
     immobilizeAndKillWithAlly: int
-    initialBuffCount: int
-    initialCrabCount: int
+    initialBuffCount: Count
+    initialCrabCount: Count
     jungleCsBefore10Minutes: float
     junglerTakedownsNearDamagedEpicMonster: int
     kda: float
@@ -330,6 +421,8 @@ class ChallengesDTO(BaseModel):
     wardTakedownsBefore20M: int
     HealFromMapSources: float
 
+    model_config = ConfigDict(use_enum_values=True)
+
 
 class MissionsDTO(BaseModel):
     playerScore0: int
@@ -379,7 +472,7 @@ class TeamDTO(BaseModel):
 
 
 class BanDTO(BaseModel):
-    championId: int
+    championId: ChampionId
     pickTurn: int
 
 
@@ -396,7 +489,7 @@ class ObjectivesDTO(BaseModel):
 
 class ObjectiveDTO(BaseModel):
     first: bool
-    kills: int
+    kills: Count
 
 
 class FeatsDTO(BaseModel):
@@ -407,4 +500,3 @@ class FeatsDTO(BaseModel):
 
 class FeatStateDTO(BaseModel):
     featState: int
-

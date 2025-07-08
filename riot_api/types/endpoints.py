@@ -1,4 +1,4 @@
-from riot_api.types.str_enum import StrEnum
+from enum import StrEnum
 
 
 class RankedTier(StrEnum):

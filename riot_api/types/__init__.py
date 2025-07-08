@@ -9,7 +9,6 @@ from riot_api.types.endpoints import (
 
 from riot_api.types.region import RoutePlatform, RouteRegion
 
-from riot_api.types.str_enum import StrEnum
 
 from riot_api.types.http_types import HttpMethod, HttpRequest, RateLimit
 
@@ -26,7 +25,6 @@ __all__ = [
     "League_v4",
     "RoutePlatform",
     "RouteRegion",
-    "StrEnum",
     "HttpMethod",
     "HttpRequest",
     "RateLimit",
