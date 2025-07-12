@@ -9,3 +9,7 @@ dependencies = ["httpx", "pydantic"]
 
 [project.optional-dependencies]
 test = ["pytest", "pytest-asyncio", "respx", "deepdiff", "python-dotenv"]
+
+
+[tool.setuptools]
+packages = ["riot_api"]
