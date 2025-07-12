@@ -1,4 +1,4 @@
-from typing import TypeVar
+from typing import TypeVar, Tuple
 
 import httpx
 from pydantic import BaseModel
@@ -20,7 +20,7 @@ class BaseClient:
     def deserialize(self, res: httpx.Response, response_model: type[T]) -> T:
         return response_model.model_validate_json(res.text)
 
-    async def send_request(self, req: HttpRequest) -> BaseModel:
+    async def send_request(self, req: HttpRequest) -> Tuple[BaseModel, httpx.Headers]:
         if self.session.is_closed:
             raise RuntimeError("Session is already closed. Cannot send request.")
 
@@ -37,4 +37,4 @@ class BaseClient:
             timeout=req.timeout,
         )
 
-        return self.deserialize(res, req.response_model)
+        return self.deserialize(res, req.response_model), res.headers
