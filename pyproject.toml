@@ -11,5 +11,6 @@ dependencies = ["httpx", "pydantic"]
 test = ["pytest", "pytest-asyncio", "respx", "deepdiff", "python-dotenv"]
 
 
-[tool.setuptools]
-packages = ["riot_api"]
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["riot_api*"]

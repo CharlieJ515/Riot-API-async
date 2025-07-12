@@ -5,7 +5,6 @@ Riot-API-async
 __author__ = "Charlie.Jang"
 __version__ = "0.0.1"
 
-from .client import Client
-from . import types
+from riot_api.client import Client
 
 __all__ = ["Client"]
