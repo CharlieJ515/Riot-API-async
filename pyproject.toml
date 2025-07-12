@@ -1,22 +1,12 @@
 [project]
 name = "riot-api-async"
 version = "0.1.0"
-description = "An asynchronous Python client for the Riot Games API."
-authors = [{ name = "CharlieJ515" }]
-license = { text = "MIT" }
-readme = "README.md"
-requires-python = ">=3.8"
-dependencies = ["aiolimiter>=1.1.0", "httpx>=0.27.0", "pydantic>=2.7.1"]
+description = "Async client for Riot Games API"
+authors = [{ name = "KyuSang Jang", email = "charlie.jang515@gmail.com" }]
+requires-python = ">=3.10"
+
+dependencies = ["aiolimiter", "httpx", "pydantic"]
 
 [project.optional-dependencies]
-dev = ["pytest>=8.2.2"]
+test = ["pytest", "pytest-asyncio", "respx", "deepdiff", "python-dotenv"]
 
-[project.urls]
-Repository = "https://github.com/CharlieJ515/Riot-API-async"
-
-[build-system]
-requires = ["setuptools>=61.0"]
-build-backend = "setuptools.build_meta"
-
-[tool.setuptools.packages.find]
-where = ["."]
