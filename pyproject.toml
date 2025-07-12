@@ -5,8 +5,7 @@ description = "Async client for Riot Games API"
 authors = [{ name = "KyuSang Jang", email = "charlie.jang515@gmail.com" }]
 requires-python = ">=3.10"
 
-dependencies = ["aiolimiter", "httpx", "pydantic"]
+dependencies = ["httpx", "pydantic"]
 
 [project.optional-dependencies]
 test = ["pytest", "pytest-asyncio", "respx", "deepdiff", "python-dotenv"]
-

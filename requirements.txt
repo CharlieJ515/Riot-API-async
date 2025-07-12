@@ -1,3 +1,0 @@
-aiolimiter
-httpx
-pydantic
