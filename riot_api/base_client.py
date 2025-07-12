@@ -9,7 +9,7 @@ T = TypeVar("T", bound=BaseModel)
 
 
 class BaseClient:
-    def __init__(self, api_key: str, rate_limit: RateLimit):
+    def __init__(self, api_key: str):
         self.api_key = api_key
         self.session = httpx.AsyncClient()
 

@@ -28,8 +28,8 @@ T = TypeVar("T", bound=BaseModel)
 
 
 class Client(BaseClient):
-    def __init__(self, api_key, rate_limit):
-        super().__init__(api_key, rate_limit)
+    def __init__(self, api_key):
+        super().__init__(api_key)
 
     # Account endpoints
     async def get_account_by_riot_id(
