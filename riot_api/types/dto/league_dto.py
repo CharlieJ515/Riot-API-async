@@ -1,43 +1,45 @@
 from typing import List, Optional
-from pydantic import BaseModel, RootModel
+from pydantic import RootModel
 
-from riot_api.types.base_types import Puuid
+from riot_api.types.base_types import Puuid, AmountInt, Count
+from riot_api.types.request import RankedQueue, RankedTier, RankedDivision
+from riot_api.types.dto.base_model import BaseModelDTO
 
 
-class LeagueListDTO(BaseModel):
+class LeagueListDTO(BaseModelDTO):
     leagueId: str
     entries: List["LeagueItemDTO"]
-    tier: str
+    tier: RankedTier
     name: str
-    queue: str
+    queue: RankedQueue
 
 
-class LeagueItemDTO(BaseModel):
+class LeagueItemDTO(BaseModelDTO):
+    puuid: Puuid
+    rank: RankedDivision
+    leaguePoints: AmountInt
+    wins: Count
+    losses: Count
     freshBlood: bool
-    wins: int
-    miniSeries: Optional["MiniSeriesDTO"] = None
     inactive: bool
     veteran: bool
     hotStreak: bool
-    rank: str
-    leaguePoints: int
-    losses: int
-    puuid: Puuid
+    miniSeries: Optional["MiniSeriesDTO"] = None
 
 
 class LeagueEntryListDTO(RootModel):
     root: List["LeagueEntryDTO"]
 
 
-class LeagueEntryDTO(BaseModel):
+class LeagueEntryDTO(BaseModelDTO):
     leagueId: str
     puuid: Puuid
-    queueType: str
-    tier: str
-    rank: str
-    leaguePoints: int
-    wins: int
-    losses: int
+    queueType: RankedQueue
+    tier: RankedTier
+    rank: RankedDivision
+    leaguePoints: AmountInt
+    wins: Count
+    losses: Count
     hotStreak: bool
     veteran: bool
     freshBlood: bool
@@ -45,7 +47,7 @@ class LeagueEntryDTO(BaseModel):
     miniSeries: Optional["MiniSeriesDTO"] = None
 
 
-class MiniSeriesDTO(BaseModel):
+class MiniSeriesDTO(BaseModelDTO):
     losses: int
     progress: str
     target: int

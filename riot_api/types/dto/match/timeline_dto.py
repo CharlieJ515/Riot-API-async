@@ -1,12 +1,10 @@
 from typing import List, Dict, Optional, Annotated, Literal, Union
 
 from pydantic import (
-    BaseModel,
     RootModel,
     Field,
     PlainSerializer,
     PlainValidator,
-    ConfigDict,
 )
 
 from riot_api.types.base_types import (
@@ -25,6 +23,7 @@ from riot_api.types.enums import (
     Lane,
 )
 from riot_api.types.converters import parse_zero_as_none, serialize_none_as_zero
+from riot_api.types.dto.base_model import BaseModelDTO
 
 OptionalParticipant = Annotated[
     Optional[Participant],
@@ -33,18 +32,18 @@ OptionalParticipant = Annotated[
 ]
 
 
-class TimelineDTO(BaseModel):
+class TimelineDTO(BaseModelDTO):
     metadata: "MetadataTimeLineDTO"
     info: "InfoTimeLineDTO"
 
 
-class MetadataTimeLineDTO(BaseModel):
+class MetadataTimeLineDTO(BaseModelDTO):
     dataVersion: str
     matchId: str
     participants: List[Puuid]
 
 
-class InfoTimeLineDTO(BaseModel):
+class InfoTimeLineDTO(BaseModelDTO):
     endOfGameResult: str
     frameInterval: TimeDeltaMilli
     gameId: int
@@ -52,14 +51,12 @@ class InfoTimeLineDTO(BaseModel):
     frames: List["FramesTimeLineDto"]
 
 
-class ParticipantTimeLineDto(BaseModel):
+class ParticipantTimeLineDto(BaseModelDTO):
     participantId: Participant
     puuid: Puuid
 
-    model_config = ConfigDict(use_enum_values=True)
 
-
-class FramesTimeLineDto(BaseModel):
+class FramesTimeLineDto(BaseModelDTO):
     events: List["EventsTimeLineDTO"]
     participantFrames: "ParticipantFramesDTO"
     timestamp: TimeDeltaMilli
@@ -68,41 +65,35 @@ class FramesTimeLineDto(BaseModel):
 #### EVENT START ####
 
 
-class PauseEndEvent(BaseModel):
+class PauseEndEvent(BaseModelDTO):
     type: Literal["PAUSE_END"]
     timestamp: TimeDeltaMilli
     realTimestamp: DatetimeMilli
 
 
-class GameEndEvent(BaseModel):
+class GameEndEvent(BaseModelDTO):
     type: Literal["GAME_END"]
     timestamp: TimeDeltaMilli
     realTimestamp: DatetimeMilli
     gameId: int
     winningTeam: Team
 
-    model_config = ConfigDict(use_enum_values=True)
 
-
-class ItemPurchasedEvent(BaseModel):
+class ItemPurchasedEvent(BaseModelDTO):
     type: Literal["ITEM_PURCHASED"]
     timestamp: TimeDeltaMilli
     participantId: OptionalParticipant
     itemId: ItemId
 
-    model_config = ConfigDict(use_enum_values=True)
 
-
-class ItemDestroyedEvent(BaseModel):
+class ItemDestroyedEvent(BaseModelDTO):
     type: Literal["ITEM_DESTROYED"]
     timestamp: TimeDeltaMilli
     participantId: Participant
     itemId: ItemId
 
-    model_config = ConfigDict(use_enum_values=True)
 
-
-class ItemUndoEvent(BaseModel):
+class ItemUndoEvent(BaseModelDTO):
     type: Literal["ITEM_UNDO"]
     timestamp: TimeDeltaMilli
     participantId: Participant
@@ -110,65 +101,51 @@ class ItemUndoEvent(BaseModel):
     afterId: ItemId
     goldGain: AmountInt
 
-    model_config = ConfigDict(use_enum_values=True)
 
-
-class ItemSoldEvent(BaseModel):
+class ItemSoldEvent(BaseModelDTO):
     type: Literal["ITEM_SOLD"]
     timestamp: TimeDeltaMilli
     participantId: Participant
     itemId: ItemId
 
-    model_config = ConfigDict(use_enum_values=True)
 
-
-class WardPlacedEvent(BaseModel):
+class WardPlacedEvent(BaseModelDTO):
     type: Literal["WARD_PLACED"]
     timestamp: TimeDeltaMilli
     creatorId: int
     wardType: Ward
 
-    model_config = ConfigDict(use_enum_values=True)
 
-
-class WardKillEvent(BaseModel):
+class WardKillEvent(BaseModelDTO):
     type: Literal["WARD_KILL"]
     timestamp: TimeDeltaMilli
     killerId: Participant
     wardType: Ward
 
-    model_config = ConfigDict(use_enum_values=True)
 
-
-class LevelUpEvent(BaseModel):
+class LevelUpEvent(BaseModelDTO):
     type: Literal["LEVEL_UP"]
     timestamp: TimeDeltaMilli
     participantId: Participant
     level: Count
 
-    model_config = ConfigDict(use_enum_values=True)
 
-
-class SkillLevelUpEvent(BaseModel):
+class SkillLevelUpEvent(BaseModelDTO):
     type: Literal["SKILL_LEVEL_UP"]
     timestamp: TimeDeltaMilli
     participantId: Participant
     skillSlot: int
     levelUpType: str
 
-    model_config = ConfigDict(use_enum_values=True)
 
-
-class ObjectiveBountyPrestartEvent(BaseModel):
+class ObjectiveBountyPrestartEvent(BaseModelDTO):
     type: Literal["OBJECTIVE_BOUNTY_PRESTART"]
     timestamp: TimeDeltaMilli
     actualStartTime: TimeDeltaMilli
     teamId: Team
 
-    model_config = ConfigDict(use_enum_values=True)
 
-
-class ChampionKillEvent(BaseModel):
+class ChampionKillEvent(BaseModelDTO):
     type: Literal["CHAMPION_KILL"]
     timestamp: TimeDeltaMilli
     bounty: AmountInt
@@ -181,10 +158,8 @@ class ChampionKillEvent(BaseModel):
     victimDamageDealt: List["VictimDamageDTO"]
     victimDamageReceived: List["VictimDamageDTO"]
 
-    model_config = ConfigDict(use_enum_values=True)
 
-
-class VictimDamageDTO(BaseModel):
+class VictimDamageDTO(BaseModelDTO):
     basic: bool
     magicDamage: AmountInt
     physicalDamage: AmountInt
@@ -196,7 +171,7 @@ class VictimDamageDTO(BaseModel):
     type: str
 
 
-class ChampionSpecialKillEvent(BaseModel):
+class ChampionSpecialKillEvent(BaseModelDTO):
     type: Literal["CHAMPION_SPECIAL_KILL"]
     timestamp: TimeDeltaMilli
     killType: str
@@ -204,10 +179,8 @@ class ChampionSpecialKillEvent(BaseModel):
     killerId: Participant
     position: "PositionDTO"
 
-    model_config = ConfigDict(use_enum_values=True)
 
-
-class TurretPlateDestroyedEvent(BaseModel):
+class TurretPlateDestroyedEvent(BaseModelDTO):
     type: Literal["TURRET_PLATE_DESTROYED"]
     timestamp: TimeDeltaMilli
     teamId: Team
@@ -215,10 +188,8 @@ class TurretPlateDestroyedEvent(BaseModel):
     laneType: Lane
     position: "PositionDTO"
 
-    model_config = ConfigDict(use_enum_values=True)
 
-
-class BuildingKillEvent(BaseModel):
+class BuildingKillEvent(BaseModelDTO):
     type: Literal["BUILDING_KILL"]
     timestamp: TimeDeltaMilli
     buildingType: str
@@ -230,10 +201,8 @@ class BuildingKillEvent(BaseModel):
     laneType: Lane
     position: "PositionDTO"
 
-    model_config = ConfigDict(use_enum_values=True)
 
-
-class EliteMonsterKillEvent(BaseModel):
+class EliteMonsterKillEvent(BaseModelDTO):
     type: Literal["ELITE_MONSTER_KILL"]
     timestamp: TimeDeltaMilli
     position: "PositionDTO"
@@ -244,24 +213,20 @@ class EliteMonsterKillEvent(BaseModel):
     bounty: AmountInt
     assistingParticipantIds: Optional[List[Participant]] = None
 
-    model_config = ConfigDict(use_enum_values=True)
 
-
-class DragonSoulGiven(BaseModel):
+class DragonSoulGiven(BaseModelDTO):
     type: Literal["DRAGON_SOUL_GIVEN"]
     timestamp: TimeDeltaMilli
     teamId: Literal[0]
     name: str
 
 
-class FeatUpdateEvent(BaseModel):
+class FeatUpdateEvent(BaseModelDTO):
     type: Literal["FEAT_UPDATE"]
     timestamp: TimeDeltaMilli
     featType: int
     featValue: int
     teamId: Team
-
-    model_config = ConfigDict(use_enum_values=True)
 
 
 EventsTimeLineDTO = Annotated[
@@ -294,10 +259,8 @@ EventsTimeLineDTO = Annotated[
 class ParticipantFramesDTO(RootModel):
     root: Dict[Participant, "ParticipantFrameDTO"]
 
-    model_config = ConfigDict(use_enum_values=True)
 
-
-class ParticipantFrameDTO(BaseModel):
+class ParticipantFrameDTO(BaseModelDTO):
     championStats: "ChampionStatsDTO"
     currentGold: AmountInt
     damageStats: "DamageStatsDTO"
@@ -311,10 +274,8 @@ class ParticipantFrameDTO(BaseModel):
     totalGold: AmountInt
     xp: int
 
-    model_config = ConfigDict(use_enum_values=True)
 
-
-class ChampionStatsDTO(BaseModel):
+class ChampionStatsDTO(BaseModelDTO):
     abilityHaste: int
     abilityPower: int
     armor: int
@@ -342,7 +303,7 @@ class ChampionStatsDTO(BaseModel):
     spellVamp: int
 
 
-class DamageStatsDTO(BaseModel):
+class DamageStatsDTO(BaseModelDTO):
     magicDamageDone: int
     magicDamageDoneToChampions: int
     magicDamageTaken: int
@@ -357,6 +318,6 @@ class DamageStatsDTO(BaseModel):
     trueDamageTaken: int
 
 
-class PositionDTO(BaseModel):
+class PositionDTO(BaseModelDTO):
     x: int
     y: int

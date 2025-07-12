@@ -1,15 +1,14 @@
-from pydantic import BaseModel
-
 from riot_api.types.base_types import Puuid
+from riot_api.types.dto.base_model import BaseModelDTO
 
 
-class AccountDTO(BaseModel):
+class AccountDTO(BaseModelDTO):
     puuid: Puuid
     gameName: str
     tagLine: str
 
 
-class AccountRegionDTO(BaseModel):
+class AccountRegionDTO(BaseModelDTO):
     puuid: Puuid
     game: str
     region: str

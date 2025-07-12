@@ -1,6 +1,6 @@
 from typing import List, Optional, Annotated
 
-from pydantic import BaseModel, Field, PlainValidator, ConfigDict, PlainSerializer
+from pydantic import Field, PlainValidator, PlainSerializer
 
 from riot_api.types.enums import (
     ChampionId,
@@ -26,20 +26,21 @@ from riot_api.types.base_types import (
     TimeDelta,
 )
 from riot_api.types.enums.summoner_spells import SummonerSpellId
+from riot_api.types.dto.base_model import BaseModelDTO
 
 
-class MatchDTO(BaseModel):
+class MatchDTO(BaseModelDTO):
     metadata: "MetadataDTO"
     info: "InfoDTO"
 
 
-class MetadataDTO(BaseModel):
+class MetadataDTO(BaseModelDTO):
     dataVersion: str
     matchId: str
     participants: List[Puuid]
 
 
-class InfoDTO(BaseModel):
+class InfoDTO(BaseModelDTO):
     endOfGameResult: str
     gameCreation: DatetimeMilli
     # TODO - change gameDuration according to riot document
@@ -58,10 +59,8 @@ class InfoDTO(BaseModel):
     teams: List["TeamDTO"]
     tournamentCode: Optional[str] = None
 
-    model_config = ConfigDict(use_enum_values=True)
 
-
-class ParticipantDTO(BaseModel):
+class ParticipantDTO(BaseModelDTO):
     allInPings: Count
     assistMePings: Count
     assists: Count
@@ -213,10 +212,8 @@ class ParticipantDTO(BaseModel):
     retreatPings: Count
     championSkinId: int
 
-    model_config = ConfigDict(use_enum_values=True)
 
-
-class ChallengesDTO(BaseModel):
+class ChallengesDTO(BaseModelDTO):
     assistStreakCount12: int = Field(alias="12AssistStreakCount")
     baronBuffGoldAdvantageOverThreshold: Optional[int] = None
     controlWardTimeCoverageInRiverOrEnemyHalf: Optional[float] = None
@@ -365,10 +362,8 @@ class ChallengesDTO(BaseModel):
     wardTakedownsBefore20M: Count
     HealFromMapSources: AmountFloat
 
-    model_config = ConfigDict(use_enum_values=True)
 
-
-class MissionsDTO(BaseModel):
+class MissionsDTO(BaseModelDTO):
     playerScore0: int
     playerScore1: int
     playerScore2: int
@@ -383,31 +378,31 @@ class MissionsDTO(BaseModel):
     playerScore11: int
 
 
-class PerksDTO(BaseModel):
+class PerksDTO(BaseModelDTO):
     statPerks: "PerkStatsDTO"
     styles: List["PerkStyleDTO"]
 
 
-class PerkStatsDTO(BaseModel):
+class PerkStatsDTO(BaseModelDTO):
     defense: int
     flex: int
     offense: int
 
 
-class PerkStyleDTO(BaseModel):
+class PerkStyleDTO(BaseModelDTO):
     description: str
     selections: List["PerkStyleSelectionDTO"]
     style: int
 
 
-class PerkStyleSelectionDTO(BaseModel):
+class PerkStyleSelectionDTO(BaseModelDTO):
     perk: int
     var1: int
     var2: int
     var3: int
 
 
-class TeamDTO(BaseModel):
+class TeamDTO(BaseModelDTO):
     bans: List["BanDTO"]
     objectives: "ObjectivesDTO"
     teamId: Team
@@ -415,12 +410,12 @@ class TeamDTO(BaseModel):
     feats: "FeatsDTO"
 
 
-class BanDTO(BaseModel):
+class BanDTO(BaseModelDTO):
     championId: ChampionId
     pickTurn: int
 
 
-class ObjectivesDTO(BaseModel):
+class ObjectivesDTO(BaseModelDTO):
     baron: "ObjectiveDTO"
     champion: "ObjectiveDTO"
     dragon: "ObjectiveDTO"
@@ -431,16 +426,16 @@ class ObjectivesDTO(BaseModel):
     atakhan: "ObjectiveDTO"
 
 
-class ObjectiveDTO(BaseModel):
+class ObjectiveDTO(BaseModelDTO):
     first: bool
     kills: Count
 
 
-class FeatsDTO(BaseModel):
+class FeatsDTO(BaseModelDTO):
     EPIC_MONSTER_KILL: "FeatStateDTO"
     FIRST_BLOOD: "FeatStateDTO"
     FIRST_TURRET: "FeatStateDTO"
 
 
-class FeatStateDTO(BaseModel):
+class FeatStateDTO(BaseModelDTO):
     featState: int

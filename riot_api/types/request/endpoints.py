@@ -9,6 +9,9 @@ class RankedTier(StrEnum):
     PLATINUM = "PLATINUM"
     EMERALD = "EMERALD"
     DIAMOND = "DIAMOND"
+    MASTER = "MASTER"
+    GRANDMASTER = "GRANDMASTER"
+    CHALLENGER = "CHALLENGER"
 
 
 class RankedDivision(StrEnum):
