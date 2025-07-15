@@ -3,33 +3,42 @@ from typing import TypeVar, Tuple
 import httpx
 from pydantic import BaseModel
 
-from riot_api.types.request import HttpRequest, RateLimit
+from riot_api.types.request import HttpRequest
 
 T = TypeVar("T", bound=BaseModel)
 
 
 class BaseClient:
+    _shared_session: httpx.AsyncClient | None = None
+
     def __init__(self, api_key: str):
         self.api_key = api_key
         self.session = httpx.AsyncClient()
 
-    async def close(self) -> None:
-        if not self.session.is_closed:
-            await self.session.aclose()
+    @classmethod
+    def get_session(cls) -> httpx.AsyncClient:
+        if cls._shared_session is None or cls._shared_session.is_closed:
+            cls._shared_session = httpx.AsyncClient(http2=True)
+        return cls._shared_session
+
+    @classmethod
+    async def close_shared_session(cls) -> None:
+        if cls._shared_session and not cls._shared_session.is_closed:
+            await cls._shared_session.aclose()
+            cls._shared_session = None
 
     def deserialize(self, res: httpx.Response, response_model: type[T]) -> T:
         return response_model.model_validate_json(res.text)
 
     async def send_request(self, req: HttpRequest) -> Tuple[BaseModel, httpx.Headers]:
-        if self.session.is_closed:
-            raise RuntimeError("Session is already closed. Cannot send request.")
+        session = self.get_session()
 
         # complete URL
         url = f"https://{req.route}{req.endpoint}"
         # authentication
         req.headers["X-Riot-Token"] = self.api_key
 
-        res = await self.session.request(
+        res = await session.request(
             method=req.method.value,
             url=url,
             params=req.params,
