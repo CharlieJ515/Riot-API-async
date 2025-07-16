@@ -4,6 +4,7 @@ import httpx
 from pydantic import BaseModel
 
 from riot_api.types.request import HttpRequest
+from riot_api.error_handler import check_status_code
 
 T = TypeVar("T", bound=BaseModel)
 
@@ -45,5 +46,6 @@ class BaseClient:
             headers=req.headers,
             timeout=req.timeout,
         )
+        check_status_code(res)
 
         return self.deserialize(res, req.response_model), res.headers
