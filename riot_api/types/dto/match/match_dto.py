@@ -210,7 +210,7 @@ class ParticipantDTO(BaseModelDTO):
     basicPings: Count
     dangerPings: Count
     retreatPings: Count
-    championSkinId: int
+    championSkinId: Optional[int] = None
 
 
 class ChallengesDTO(BaseModelDTO):
