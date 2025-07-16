@@ -22,7 +22,7 @@ class BaseClient:
         return cls._shared_session
 
     @classmethod
-    async def close_shared_session(cls) -> None:
+    async def close_session(cls) -> None:
         if cls._shared_session and not cls._shared_session.is_closed:
             await cls._shared_session.aclose()
             cls._shared_session = None
