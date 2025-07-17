@@ -1,11 +1,15 @@
+import httpx
+
+
 # riot_api/exceptions.py
 class RiotAPIError(Exception):
     """Base class for all Riot API exceptions."""
 
-    def __init__(self, status_code: int, message: str = ""):
-        super().__init__(f"[{status_code}] {message}")
+    def __init__(self, status_code: int, headers: httpx.Headers, body: str):
+        super().__init__(f"[{status_code}] {body}")
         self.status_code = status_code
-        self.message = message
+        self.body = body
+        self.headers = headers
 
 
 class BadRequestError(RiotAPIError):
@@ -35,8 +39,14 @@ class NotFoundError(RiotAPIError):
 class RateLimitError(RiotAPIError):
     """429 - Too many requests."""
 
-    def __init__(self, status_code: int, retry_after: float | None, message: str = ""):
-        super().__init__(status_code, message)
+    def __init__(
+        self,
+        status_code: int,
+        headers: httpx.Headers,
+        body: str,
+        retry_after: int,
+    ):
+        super().__init__(status_code, headers, body)
         self.retry_after = retry_after
 
 

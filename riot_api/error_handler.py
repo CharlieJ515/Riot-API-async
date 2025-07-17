@@ -1,5 +1,5 @@
 from typing import Optional
-from httpx import Response
+from httpx import Response, head
 from riot_api.exceptions import (
     RiotAPIError,
     BadRequestError,
@@ -23,20 +23,16 @@ def check_status_code(res: Response) -> None:
     if res.status_code < 400:
         return
 
-    body = res.json()
-    msg = body.get("status", {}).get("message", res.text.strip())
+    status_code = res.status_code
+    headers = res.headers
+    body = res.text
     cls = ERROR_MAP.get(res.status_code, RiotAPIError)
 
     if res.status_code == 429:
-        retry_after: Optional[float] = None
-        if "Retry-After" in res.headers:
-            try:
-                retry_after = float(res.headers["Retry-After"])
-            except ValueError:
-                pass
-        raise cls(res.status_code, retry_after, msg)
+        retry_after: int = int(res.headers["retry-after"])
+        raise cls(status_code, headers, body, retry_after)
 
     elif 500 <= res.status_code < 600:
-        raise ServerError(res.status_code, msg)
+        raise ServerError(status_code, headers, body)
     else:
-        raise cls(res.status_code, msg)
+        raise cls(status_code, headers, body)
