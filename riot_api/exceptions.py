@@ -5,11 +5,12 @@ import httpx
 class RiotAPIError(Exception):
     """Base class for all Riot API exceptions."""
 
-    def __init__(self, status_code: int, headers: httpx.Headers, body: str):
-        super().__init__(f"[{status_code}] {body}")
+    def __init__(self, status_code: int, headers: httpx.Headers, body: dict, msg: str):
+        super().__init__(f"[{status_code}] {msg}")
         self.status_code = status_code
-        self.body = body
         self.headers = headers
+        self.body = body
+        self.msg = msg
 
 
 class BadRequestError(RiotAPIError):
@@ -44,9 +45,10 @@ class RateLimitError(RiotAPIError):
         status_code: int,
         headers: httpx.Headers,
         body: str,
+        msg: str,
         retry_after: int,
     ):
-        super().__init__(status_code, headers, body)
+        super().__init__(status_code, headers, body, msg)
         self.retry_after = retry_after
 
 

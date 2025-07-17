@@ -25,14 +25,15 @@ def check_status_code(res: Response) -> None:
 
     status_code = res.status_code
     headers = res.headers
-    body = res.text
+    body = res.json()
+    msg = body.get("status", {}).get("message", res.text.strip())
     cls = ERROR_MAP.get(res.status_code, RiotAPIError)
 
     if res.status_code == 429:
         retry_after: int = int(res.headers["retry-after"])
-        raise cls(status_code, headers, body, retry_after)
+        raise cls(status_code, headers, body, msg, retry_after)
 
     elif 500 <= res.status_code < 600:
-        raise ServerError(status_code, headers, body)
+        raise ServerError(status_code, headers, body, msg)
     else:
-        raise cls(status_code, headers, body)
+        raise cls(status_code, headers, body, msg)
