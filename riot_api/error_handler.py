@@ -1,5 +1,4 @@
-from typing import Optional
-from httpx import Response, head
+import httpx
 from riot_api.exceptions import (
     RiotAPIError,
     BadRequestError,
@@ -19,7 +18,7 @@ ERROR_MAP = {
 }
 
 
-def check_status_code(res: Response) -> None:
+def check_status_code(res: httpx.Response) -> None:
     if res.status_code < 400:
         return
 

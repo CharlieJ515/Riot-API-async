@@ -44,7 +44,7 @@ class RateLimitError(RiotAPIError):
         self,
         status_code: int,
         headers: httpx.Headers,
-        body: str,
+        body: dict,
         msg: str,
         retry_after: int,
     ):
