@@ -38,6 +38,7 @@ class Client(BaseClient):
         game_name: str,
         tag_line: str,
         response_model: Type[T] = AccountDTO,
+        timeout=3,
     ) -> Tuple[T, httpx.Headers]:
         formatted_endpoint = Account_v1.account_by_riot_id.value.format(
             gameName=game_name, tagLine=tag_line
@@ -47,6 +48,7 @@ class Client(BaseClient):
             route=route,
             endpoint=formatted_endpoint,
             response_model=response_model,
+            timeout=timeout,
         )
         res, headers = await self.send_request(req)
         return cast(T, res), headers
@@ -56,6 +58,7 @@ class Client(BaseClient):
         route: RouteRegion,
         puuid: str,
         response_model: Type[T] = AccountDTO,
+        timeout=3,
     ) -> Tuple[T, httpx.Headers]:
         formatted_endpoint = Account_v1.account_by_puuid.value.format(puuid=puuid)
         req = HttpRequest(
@@ -63,6 +66,7 @@ class Client(BaseClient):
             route=route,
             endpoint=formatted_endpoint,
             response_model=response_model,
+            timeout=timeout,
         )
         res, headers = await self.send_request(req)
         return cast(T, res), headers
@@ -73,6 +77,7 @@ class Client(BaseClient):
         game: str,
         puuid: str,
         response_model: Type[T] = AccountRegionDTO,
+        timeout=3,
     ) -> Tuple[T, httpx.Headers]:
         formatted_endpoint = Account_v1.account_region.value.format(
             game=game, puuid=puuid
@@ -82,6 +87,7 @@ class Client(BaseClient):
             route=route,
             endpoint=formatted_endpoint,
             response_model=response_model,
+            timeout=timeout,
         )
         res, headers = await self.send_request(req)
         return cast(T, res), headers
@@ -98,6 +104,7 @@ class Client(BaseClient):
         start: Optional[int] = None,
         count: Optional[int] = None,
         response_model: Type[T] = MatchIdListDTO,
+        timeout=3,
     ) -> Tuple[T, httpx.Headers]:
         """
         Retrieve a list of match IDs for a given PUUID with optional filters.
@@ -146,12 +153,17 @@ class Client(BaseClient):
             endpoint=formatted_endpoint,
             params=params,
             response_model=response_model,
+            timeout=timeout,
         )
         res, headers = await self.send_request(req)
         return cast(T, res), headers
 
     async def get_match_by_match_id(
-        self, route: RouteRegion, match_id: str, response_model: Type[T] = MatchDTO
+        self,
+        route: RouteRegion,
+        match_id: str,
+        response_model: Type[T] = MatchDTO,
+        timeout=3,
     ) -> Tuple[T, httpx.Headers]:
         formatted_endpoint = Match_v5.match_by_matchId.value.format(matchId=match_id)
         req = HttpRequest(
@@ -159,12 +171,17 @@ class Client(BaseClient):
             route=route,
             endpoint=formatted_endpoint,
             response_model=response_model,
+            timeout=timeout,
         )
         res, headers = await self.send_request(req)
         return cast(T, res), headers
 
     async def get_match_timeline(
-        self, route: RouteRegion, match_id: str, response_model: Type[T] = TimelineDTO
+        self,
+        route: RouteRegion,
+        match_id: str,
+        response_model: Type[T] = TimelineDTO,
+        timeout=3,
     ) -> Tuple[T, httpx.Headers]:
         formatted_endpoint = Match_v5.match_timeline.value.format(matchId=match_id)
         req = HttpRequest(
@@ -172,6 +189,7 @@ class Client(BaseClient):
             route=route,
             endpoint=formatted_endpoint,
             response_model=response_model,
+            timeout=timeout,
         )
         res, headers = await self.send_request(req)
         return cast(T, res), headers
@@ -185,6 +203,7 @@ class Client(BaseClient):
         division: RankedDivision,
         page: int = 1,
         response_model: Type[T] = LeagueEntryListDTO,
+        timeout=3,
     ) -> Tuple[T, httpx.Headers]:
         formatted_endpoint = League_v4.league_entry_by_tier.value.format(
             queue=queue.value, tier=tier.value, division=division.value
@@ -195,6 +214,7 @@ class Client(BaseClient):
             endpoint=formatted_endpoint,
             params={"page": page},
             response_model=response_model,
+            timeout=timeout,
         )
         res, headers = await self.send_request(req)
         return cast(T, res), headers
@@ -204,6 +224,7 @@ class Client(BaseClient):
         route: RoutePlatform,
         league_id: str,
         response_model: Type[T] = LeagueListDTO,
+        timeout=3,
     ) -> Tuple[T, httpx.Headers]:
         formatted_endpoint = League_v4.league_by_leagueId.value.format(
             leagueId=league_id
@@ -213,6 +234,7 @@ class Client(BaseClient):
             route=route,
             endpoint=formatted_endpoint,
             response_model=response_model,
+            timeout=timeout,
         )
         res, headers = await self.send_request(req)
         return cast(T, res), headers
@@ -222,6 +244,7 @@ class Client(BaseClient):
         route: RoutePlatform,
         queue: RankedQueue,
         response_model: Type[T] = LeagueListDTO,
+        timeout=10,
     ) -> Tuple[T, httpx.Headers]:
         formatted_endpoint = League_v4.challenger_league_by_queue.value.format(
             queue=queue.value
@@ -231,6 +254,7 @@ class Client(BaseClient):
             route=route,
             endpoint=formatted_endpoint,
             response_model=response_model,
+            timeout=timeout,
         )
         res, headers = await self.send_request(req)
         return cast(T, res), headers
@@ -240,6 +264,7 @@ class Client(BaseClient):
         route: RoutePlatform,
         queue: RankedQueue,
         response_model: Type[T] = LeagueListDTO,
+        timeout=10,
     ) -> Tuple[T, httpx.Headers]:
         formatted_endpoint = League_v4.grandmaster_league_by_queue.value.format(
             queue=queue.value
@@ -249,6 +274,7 @@ class Client(BaseClient):
             route=route,
             endpoint=formatted_endpoint,
             response_model=response_model,
+            timeout=timeout,
         )
         res, headers = await self.send_request(req)
         return cast(T, res), headers
@@ -258,6 +284,7 @@ class Client(BaseClient):
         route: RoutePlatform,
         queue: RankedQueue,
         response_model: Type[T] = LeagueListDTO,
+        timeout=10,
     ) -> Tuple[T, httpx.Headers]:
         formatted_endpoint = League_v4.master_league_by_queue.value.format(
             queue=queue.value
@@ -267,6 +294,7 @@ class Client(BaseClient):
             route=route,
             endpoint=formatted_endpoint,
             response_model=response_model,
+            timeout=timeout,
         )
         res, headers = await self.send_request(req)
         return cast(T, res), headers
