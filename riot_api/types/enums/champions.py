@@ -2,6 +2,7 @@ from enum import IntEnum, StrEnum
 
 
 class ChampionId(IntEnum):
+    NONE = -1
     AATROX = 266
     AHRI = 103
     AKALI = 84
@@ -259,7 +260,7 @@ class ChampionName(StrEnum):
     MEL = "mel"
     MILIO = "milio"
     MISSFORTUNE = "missfortune"
-    MONKEYKING = "wukong"
+    MONKEYKING = "monkeyking"
     MORDEKAISER = "mordekaiser"
     MORGANA = "morgana"
     NAAFIRI = "naafiri"
