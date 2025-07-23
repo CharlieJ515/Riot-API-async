@@ -73,7 +73,7 @@ class Client(BaseClient):
 
     async def get_account_region(
         self,
-        route: Union[RouteRegion, RoutePlatform],
+        route: RouteRegion,
         game: str,
         puuid: str,
         response_model: Type[T] = AccountRegionDTO,
