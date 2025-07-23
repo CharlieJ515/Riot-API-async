@@ -34,7 +34,7 @@ class Client(BaseClient):
     # Account endpoints
     async def get_account_by_riot_id(
         self,
-        route: RouteRegion,
+        region: RouteRegion,
         game_name: str,
         tag_line: str,
         response_model: Type[T] = AccountDTO,
@@ -45,7 +45,7 @@ class Client(BaseClient):
         )
         req = HttpRequest(
             method=HttpMethod.GET,
-            route=route,
+            route=region,
             endpoint=formatted_endpoint,
             response_model=response_model,
             timeout=timeout,
@@ -55,7 +55,7 @@ class Client(BaseClient):
 
     async def get_account_by_puuid(
         self,
-        route: RouteRegion,
+        region: RouteRegion,
         puuid: str,
         response_model: Type[T] = AccountDTO,
         timeout=3,
@@ -63,7 +63,7 @@ class Client(BaseClient):
         formatted_endpoint = Account_v1.account_by_puuid.value.format(puuid=puuid)
         req = HttpRequest(
             method=HttpMethod.GET,
-            route=route,
+            route=region,
             endpoint=formatted_endpoint,
             response_model=response_model,
             timeout=timeout,
@@ -73,7 +73,7 @@ class Client(BaseClient):
 
     async def get_account_region(
         self,
-        route: RouteRegion,
+        region: RouteRegion,
         game: str,
         puuid: str,
         response_model: Type[T] = AccountRegionDTO,
@@ -84,7 +84,7 @@ class Client(BaseClient):
         )
         req = HttpRequest(
             method=HttpMethod.GET,
-            route=route,
+            route=region,
             endpoint=formatted_endpoint,
             response_model=response_model,
             timeout=timeout,
@@ -95,7 +95,7 @@ class Client(BaseClient):
     # Match endpoints
     async def get_match_ids_by_puuid(
         self,
-        route: RouteRegion,
+        region: RouteRegion,
         puuid: str,
         startTime: Optional[int] = None,
         endTime: Optional[int] = None,
@@ -149,7 +149,7 @@ class Client(BaseClient):
 
         req = HttpRequest(
             method=HttpMethod.GET,
-            route=route,
+            route=region,
             endpoint=formatted_endpoint,
             params=params,
             response_model=response_model,
@@ -160,7 +160,7 @@ class Client(BaseClient):
 
     async def get_match_by_match_id(
         self,
-        route: RouteRegion,
+        region: RouteRegion,
         match_id: str,
         response_model: Type[T] = MatchDTO,
         timeout=3,
@@ -168,7 +168,7 @@ class Client(BaseClient):
         formatted_endpoint = Match_v5.match_by_matchId.value.format(matchId=match_id)
         req = HttpRequest(
             method=HttpMethod.GET,
-            route=route,
+            route=region,
             endpoint=formatted_endpoint,
             response_model=response_model,
             timeout=timeout,
@@ -178,7 +178,7 @@ class Client(BaseClient):
 
     async def get_match_timeline(
         self,
-        route: RouteRegion,
+        region: RouteRegion,
         match_id: str,
         response_model: Type[T] = TimelineDTO,
         timeout=3,
@@ -186,7 +186,7 @@ class Client(BaseClient):
         formatted_endpoint = Match_v5.match_timeline.value.format(matchId=match_id)
         req = HttpRequest(
             method=HttpMethod.GET,
-            route=route,
+            route=region,
             endpoint=formatted_endpoint,
             response_model=response_model,
             timeout=timeout,
@@ -197,7 +197,7 @@ class Client(BaseClient):
     # League endpoints
     async def get_league_entries_by_tier(
         self,
-        route: RoutePlatform,
+        platform: RoutePlatform,
         queue: RankedQueue,
         tier: RankedTier,
         division: RankedDivision,
@@ -210,7 +210,7 @@ class Client(BaseClient):
         )
         req = HttpRequest(
             method=HttpMethod.GET,
-            route=route,
+            route=platform,
             endpoint=formatted_endpoint,
             params={"page": page},
             response_model=response_model,
@@ -221,7 +221,7 @@ class Client(BaseClient):
 
     async def get_league_by_league_id(
         self,
-        route: RoutePlatform,
+        platform: RoutePlatform,
         league_id: str,
         response_model: Type[T] = LeagueListDTO,
         timeout=3,
@@ -231,7 +231,7 @@ class Client(BaseClient):
         )
         req = HttpRequest(
             method=HttpMethod.GET,
-            route=route,
+            route=platform,
             endpoint=formatted_endpoint,
             response_model=response_model,
             timeout=timeout,
@@ -241,7 +241,7 @@ class Client(BaseClient):
 
     async def get_challenger_league(
         self,
-        route: RoutePlatform,
+        platform: RoutePlatform,
         queue: RankedQueue,
         response_model: Type[T] = LeagueListDTO,
         timeout=10,
@@ -251,7 +251,7 @@ class Client(BaseClient):
         )
         req = HttpRequest(
             method=HttpMethod.GET,
-            route=route,
+            route=platform,
             endpoint=formatted_endpoint,
             response_model=response_model,
             timeout=timeout,
@@ -261,7 +261,7 @@ class Client(BaseClient):
 
     async def get_grandmaster_league(
         self,
-        route: RoutePlatform,
+        platform: RoutePlatform,
         queue: RankedQueue,
         response_model: Type[T] = LeagueListDTO,
         timeout=10,
@@ -271,7 +271,7 @@ class Client(BaseClient):
         )
         req = HttpRequest(
             method=HttpMethod.GET,
-            route=route,
+            route=platform,
             endpoint=formatted_endpoint,
             response_model=response_model,
             timeout=timeout,
@@ -281,7 +281,7 @@ class Client(BaseClient):
 
     async def get_master_league(
         self,
-        route: RoutePlatform,
+        platform: RoutePlatform,
         queue: RankedQueue,
         response_model: Type[T] = LeagueListDTO,
         timeout=10,
@@ -291,7 +291,7 @@ class Client(BaseClient):
         )
         req = HttpRequest(
             method=HttpMethod.GET,
-            route=route,
+            route=platform,
             endpoint=formatted_endpoint,
             response_model=response_model,
             timeout=timeout,
