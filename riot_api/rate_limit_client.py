@@ -138,9 +138,6 @@ def add_limit(
     return decorator
 
 
-T = TypeVar("T", bound=BaseModel)
-
-
 class RateLimitClient(Client):
     limits: dict[tuple[str, str], RateLimitItem] = {}
     storage: MemoryStorage
@@ -205,3 +202,6 @@ def reset_rate_limited_client():
             limited_method_long
         )
         setattr(RateLimitClient, name, limited_method_short)
+
+
+reset_rate_limited_client()
