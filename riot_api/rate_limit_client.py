@@ -103,7 +103,6 @@ def add_limit(
             if limit is None:
                 if not block.is_set():
                     block.set()
-                    print("blocking")
 
                     res, headers = await func(self, *args, **kwargs)
                     limit = get_limit_info(headers)
