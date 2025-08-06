@@ -165,6 +165,7 @@ class ChampionId(IntEnum):
     YASUO = 157
     YONE = 777
     YORICK = 83
+    YUNARA = 804
     YUUMI = 350
     ZAC = 154
     ZED = 238
@@ -338,6 +339,7 @@ class ChampionName(StrEnum):
     YASUO = "yasuo"
     YONE = "yone"
     YORICK = "yorick"
+    YUNARA = "yunara"
     YUUMI = "yuumi"
     ZAC = "zac"
     ZED = "zed"
